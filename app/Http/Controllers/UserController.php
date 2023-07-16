@@ -17,13 +17,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->isAdmin)
-            return $this->sendResponse(User::all()->toArray(), 'Users retrieved successfully.');
-        else
-            return [
-            'mail' =>  Auth::user()->email,
-            'password' =>  Auth::user()->password,
-            ];
+        if (Auth::user()->isAdmin) {
+            return response()->json([
+                'success' => true,
+                'data' => User::all()->toArray(),
+                'message' => 'Users retrieved successfully.',
+            ], 200);
+        } else {
+            return response()->json([
+                'mail' => Auth::user()->email,
+                'password' => Auth::user()->password,
+            ], 200);
+        }
     }
 
     /**
