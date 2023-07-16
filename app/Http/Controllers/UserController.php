@@ -75,6 +75,8 @@ class UserController extends Controller
 
         if ($create)
             return "Register as a normal user. Your api token is $apiToken";
+        else
+            return "Registration failed";
     }
 
     /**
