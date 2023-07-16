@@ -8,7 +8,7 @@ use Validator;//for data validation
 use App\Http\Controllers\Controller;//base controller
 use Illuminate\Support\Facades\Auth;//for Auth::user();returens the 
 use Str;//for Str::random
-class UserController extends BaseController
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.

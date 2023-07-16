@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,8 +18,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('user', 'UserController@store'); //註冊
 Route::post('login', 'LoginController@login'); //登入
-
-
 
 
 Route::middleware('auth:api')->get('user', 'UserController@index');  //查看
