@@ -7,7 +7,7 @@ use Str;
 use App\Models\User;//class for Users
 use Illuminate\Http\Request;
 
-class LoginController
+class LoginController extends Controller
 {
     public function login(Request $request)
     {

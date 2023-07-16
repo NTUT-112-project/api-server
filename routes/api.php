@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -17,13 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('user', 'UserController@store'); //註冊
-Route::post('login', 'LoginController@login'); //登入
+Route::post('user', [UserController::class, 'store']); //註冊
+Route::post('login', [LoginController::class, 'login']); //登入
 
 
-
-
-Route::middleware('auth:api')->get('user', 'UserController@index');  //查看
-Route::middleware('auth:api')->put('user', 'UserController@update'); //編輯
-Route::middleware('auth:api')->delete('user/{members}', 'UserController@destroy'); //刪除
-Route::middleware('auth:api')->get('logout', 'LogoutController@logout'); //登出
+Route::middleware('auth:api')->get('user', [UserController::class, 'index']);  //查看
+Route::middleware('auth:api')->put('user', [UserController::class, 'update']); //編輯
+Route::middleware('auth:api')->delete('user/{members}', [UserController::class, 'destroy']); //刪除
+Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout']); //登出
