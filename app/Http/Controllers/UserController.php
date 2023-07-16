@@ -17,13 +17,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->isAdmin)
-            return $this->sendResponse(User::all()->toArray(), 'Users retrieved successfully.');
-        else
-            return [
-            'mail' =>  Auth::user()->email,
-            'password' =>  Auth::user()->password,
+        if (Auth::user()->isAdmin) {
+            return $this->sendResponse(User::all()->toArray(),'Users retrieved successfully.');
+        } else {
+            $User=[
+                'mail' => Auth::user()->email,
+                'password' => Auth::user()->password,
             ];
+            return $this->sendResponse($User,'Users retrieved successfully.');
+        }
     }
 
     /**
@@ -52,8 +54,7 @@ class UserController extends Controller
             }
 
         } catch (Exception $e) {
-            sendError($e, 'Registered failed.', 500);
-
+            return $this->sendError($e->getMessage(),'Registered failed.',500);
         }
 
     }
@@ -62,10 +63,7 @@ class UserController extends Controller
         $request->validate([ 
             'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
             'password' => ['required', 'string', 'min:6', 'max:12'],
-        ]);
-
-
-        
+        ]);        
         $apiToken = Str::random(10);
         $create = User::create([
             'email' => $request['email'],
@@ -96,11 +94,11 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return sendError($validator->errors(),'Validation Error.',422);
         }
         $User = Auth::user();
         if ($User->update($request->all()))
-            return $this->sendResponse($User->toArray(), 'User updated successfully.');
+            return $this->sendResponse($User->toArray(),'User updated successfully.');
     }
 
     /**
@@ -113,10 +111,9 @@ class UserController extends Controller
     {
         if (Auth::user()->isAdmin){
             if ($Users->delete())
-                return $this->sendResponse($Users->toArray(), 'User deleted successfully.');
+                return $this->sendResponse($Users->toArray(),'User deleted successfully.');
         }
         else
             return "You have no authority to delete";
-
     }
 }

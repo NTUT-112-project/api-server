@@ -18,4 +18,26 @@ class Controller extends BaseController
     //allowing the controller to validate incoming request data.
     //This trait includes methods for validating user input,
     //such as checking for required fields, data formats, or custom validation rules.
+    public function sendResponse($result, $message)
+    {
+        $response = [
+            'success' => true,
+            'data'    => $result,
+            'message' => $message,
+        ];
+        return response()->json($response, 200);
+    }
+    public function sendError($error, $errorMessages = [], $code = 404)
+    {
+        $response = [
+            'success' => false,
+            'message' => $error,
+        ];
+
+        if(!empty($errorMessages)){
+            $response['data'] = $errorMessages;
+        }
+        return response()->json($response, $code);
+    }
+
 }
