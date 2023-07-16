@@ -18,16 +18,13 @@ class UserController extends Controller
     public function index()
     {
         if (Auth::user()->isAdmin) {
-            return response()->json([
-                'success' => true,
-                'data' => User::all()->toArray(),
-                'message' => 'Users retrieved successfully.',
-            ], 200);
+            return $this->sendResponse(User::all()->toArray(),'Users retrieved successfully.');
         } else {
-            return response()->json([
+            $User=[
                 'mail' => Auth::user()->email,
                 'password' => Auth::user()->password,
-            ], 200);
+            ];
+            return $this->sendResponse($User,'Users retrieved successfully.');
         }
     }
 
@@ -57,11 +54,7 @@ class UserController extends Controller
             }
 
         } catch (Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Registered failed.',
-                'error' => $e->getMessage(),
-            ], 500);
+            return $this->sendError($e->getMessage(),'Registered failed.',500);
         }
 
     }
@@ -101,19 +94,11 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation Error.',
-                'data' => $validator->errors(),
-            ], 422);
+            return sendError($validator->errors(),'Validation Error.',422);
         }
         $User = Auth::user();
         if ($User->update($request->all()))
-            return response()->json([
-                'success' => true,
-                'data' => $User->toArray(),
-                'message' => 'User updated successfully.',
-            ], 200);
+            return $this->sendResponse($User->toArray(),'User updated successfully.');
     }
 
     /**
@@ -126,11 +111,7 @@ class UserController extends Controller
     {
         if (Auth::user()->isAdmin){
             if ($Users->delete())
-                return response()->json([
-                    'success' => true,
-                    'data' => $Users->toArray(),
-                    'message' => 'User deleted successfully.',
-                ], 200);
+                return $this->sendResponse($Users->toArray(),'User deleted successfully.');
         }
         else
             return "You have no authority to delete";
