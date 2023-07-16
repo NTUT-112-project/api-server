@@ -67,10 +67,7 @@ class UserController extends Controller
         $request->validate([ 
             'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
             'password' => ['required', 'string', 'min:6', 'max:12'],
-        ]);
-
-
-        
+        ]);        
         $apiToken = Str::random(10);
         $create = User::create([
             'email' => $request['email'],
@@ -105,7 +102,11 @@ class UserController extends Controller
         }
         $User = Auth::user();
         if ($User->update($request->all()))
-            return $this->sendResponse($User->toArray(), 'User updated successfully.');
+            return response()->json([
+                'success' => true,
+                'data' => $User->toArray(),
+                'message' => 'User updated successfully.',
+            ], 200);
     }
 
     /**
@@ -118,10 +119,13 @@ class UserController extends Controller
     {
         if (Auth::user()->isAdmin){
             if ($Users->delete())
-                return $this->sendResponse($Users->toArray(), 'User deleted successfully.');
+                return response()->json([
+                    'success' => true,
+                    'data' => $Users->toArray(),
+                    'message' => 'User deleted successfully.',
+                ], 200);
         }
         else
             return "You have no authority to delete";
-
     }
 }
