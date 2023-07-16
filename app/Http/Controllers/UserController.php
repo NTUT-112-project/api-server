@@ -57,8 +57,11 @@ class UserController extends Controller
             }
 
         } catch (Exception $e) {
-            sendError($e, 'Registered failed.', 500);
-
+            return response()->json([
+                'success' => false,
+                'message' => 'Registered failed.',
+                'error' => $e->getMessage(),
+            ], 500);
         }
 
     }
@@ -98,7 +101,11 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Validation Error.', $validator->errors());
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation Error.',
+                'data' => $validator->errors(),
+            ], 422);
         }
         $User = Auth::user();
         if ($User->update($request->all()))
