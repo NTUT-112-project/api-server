@@ -64,7 +64,7 @@ class UserController extends Controller
     public function store(Request $request)//register normal account
     {
         $request->validate([ 
-            'uid' => ['string', 'uid', 'max:255', 'unique:Users'],
+            'uid' => ['required', 'string', 'max:255', 'unique:Users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
             'password' => ['required', 'string', 'min:6', 'max:12'],
         ]);        
@@ -86,7 +86,7 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\User $Users
+     * @param \App\Models\User $Users
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -94,7 +94,7 @@ class UserController extends Controller
 
         $input = $request->all();
         $validator = Validator::make($input, [ //data validation test
-            'uid' => ['string', 'uid', 'max:255', 'unique:Users'],
+            'uid' => ['string', 'max:255', 'unique:Users'],
             'email' => ['string', 'email', 'max:255', 'unique:Users'],
             'password' => ['string', 'min:6', 'max:12'],
         ]);
@@ -110,7 +110,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\User $Users
+     * @param \App\Models\User $Users
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $Users)
