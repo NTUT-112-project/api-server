@@ -21,24 +21,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // http://127.0.0.1:8000/api/user with email/password
-Route::post('admin', [UserController::class, 'adminStore']); //admin註冊
-
+Route::post('admin', [UserController::class, 'adminStore']); //admin register
 // http://127.0.0.1:8000/api/user with email/password
-Route::post('user', [UserController::class, 'store']); //註冊
-
+Route::post('user', [UserController::class, 'store']); //register
 // http://127.0.0.1:8000/api/login with email/password
-Route::post('login', [LoginController::class, 'login']); //登入
+Route::post('login', [LoginController::class, 'login']); //login
 
 
-
-//http://127.0.0.1:8000/api/user?api_token={api_token}
-Route::middleware('auth:api')->get('user', [UserController::class, 'index']);  //查看
-
-//http://127.0.0.1:8000/api/user?api_token={api_token}
-Route::middleware('auth:api')->put('user', [UserController::class, 'update']); //編輯
-
-//http://127.0.0.1:8000/api/user/{id}?api_token={api_token}
-Route::middleware('auth:api')->delete('user/{users}', [UserController::class, 'destroy']); //刪除
-
-//http://127.0.0.1:8000/api/logout?api_token={api_token}
-Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout']); //登出
+//http://127.0.0.1:8000/api/user?apiToken={apiToken}
+Route::middleware('auth:api')->get('user', [UserController::class, 'info']);  //check info
+//http://127.0.0.1:8000/api/user?apiToken={apiToken}
+Route::middleware('auth:api')->put('user', [UserController::class, 'update']); //edit account
+//http://127.0.0.1:8000/api/user/{id}?apiToken={apiToken}
+Route::middleware('auth:api')->delete('user/{users}', [UserController::class, 'destroy']); //delete
+//http://127.0.0.1:8000/api/logout?apiToken={apiToken}
+Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout']); //logout

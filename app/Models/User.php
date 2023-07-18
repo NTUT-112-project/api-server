@@ -21,7 +21,7 @@ class User extends Authenticatable
         'uid',
         'email',
         'password',
-        'api_token',
+        'apiToken',
         'isAdmin'
     ];
 

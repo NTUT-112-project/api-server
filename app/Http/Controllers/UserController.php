@@ -8,6 +8,7 @@ use Validator;//for data validation
 use App\Http\Controllers\Controller;//base controller
 use Illuminate\Support\Facades\Auth;//for Auth::user();returens the 
 use Str;//for Str::random
+use Illuminate\Http\JsonResponse;
 class UserController extends Controller
 {
     /**
@@ -15,7 +16,7 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function info()
     {
         if (Auth::user()->isAdmin) {
             return $this->sendResponse(User::all()->toArray(),'Users retrieved successfully.');
@@ -37,19 +38,21 @@ class UserController extends Controller
      */
       public function adminStore(Request $request) {//register admin account
         try {
-            $request->validate([
-                'uid' => ['required', 'string', 'max:255', 'unique:Users'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
-                'password' => ['required', 'string', 'min:6', 'max:12'], 
+            $validator = Validator::make($request->all(), [ //data validation test
+            'uid' => ['required','string', 'max:255', 'unique:Users'],
+            'email' => ['required','string', 'email', 'max:255', 'unique:Users'],
+            'password' => ['required','string', 'min:6', 'max:12'],
             ]);
-
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            }
             $apiToken = Str::random(10);
             $create = User::create([
                 'uid' => $request['uid'],
                 'email' => $request['email'],
                 'password' => $request['password'],
                 'isAdmin' => '1',
-                'api_token' => $apiToken,
+                'apiToken' => $apiToken,
             ]);
 
             if ($create) {
@@ -63,23 +66,26 @@ class UserController extends Controller
     }
     public function store(Request $request)//register normal account
     {
-        $request->validate([ 
-            'uid' => ['required', 'string', 'max:255', 'unique:Users'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
-            'password' => ['required', 'string', 'min:6', 'max:12'],
-        ]);        
+        $validator = Validator::make($request->all(), [ //data validation test
+        'uid' => ['required','string', 'max:255', 'unique:Users'],
+        'email' => ['required','string', 'email', 'max:255', 'unique:Users'],
+        'password' => ['required','string', 'min:6', 'max:12'],
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+        }
         $apiToken = Str::random(10);
         $create = User::create([
             'uid' => $request['uid'],
             'email' => $request['email'],
             'password' => $request['password'],
-            'api_token' => $apiToken,
+            'apiToken' => $apiToken,
         ]);
 
         if ($create)
             return "Register as a normal user. Your api token is $apiToken";
         else
-            return "Registration failed";
+            return $validateResult;
     }
 
     /**

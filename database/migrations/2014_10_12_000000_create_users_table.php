@@ -17,7 +17,7 @@ return new class extends Migration
 			$table->string('email');
 			$table->string('password');
 			$table->boolean('isAdmin')->default(0);
-			$table->string('api_token');
+			$table->string('apiToken');
 			$table->timestamps();
 		});
     }
