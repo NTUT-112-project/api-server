@@ -21,6 +21,7 @@ class UserController extends Controller
             return $this->sendResponse(User::all()->toArray(),'Users retrieved successfully.');
         } else {
             $User=[
+                'uid' => Auth::user()->uid,
                 'mail' => Auth::user()->email,
                 'password' => Auth::user()->password,
             ];
@@ -37,12 +38,14 @@ class UserController extends Controller
       public function adminStore(Request $request) {//register admin account
         try {
             $request->validate([
+                'uid' => ['required', 'string', 'max:255', 'unique:Users'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
                 'password' => ['required', 'string', 'min:6', 'max:12'], 
             ]);
 
             $apiToken = Str::random(10);
             $create = User::create([
+                'uid' => $request['uid'],
                 'email' => $request['email'],
                 'password' => $request['password'],
                 'isAdmin' => '1',
@@ -61,11 +64,13 @@ class UserController extends Controller
     public function store(Request $request)//register normal account
     {
         $request->validate([ 
+            'uid' => ['string', 'uid', 'max:255', 'unique:Users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
             'password' => ['required', 'string', 'min:6', 'max:12'],
         ]);        
         $apiToken = Str::random(10);
         $create = User::create([
+            'uid' => $request['uid'],
             'email' => $request['email'],
             'password' => $request['password'],
             'api_token' => $apiToken,
@@ -89,6 +94,7 @@ class UserController extends Controller
 
         $input = $request->all();
         $validator = Validator::make($input, [ //data validation test
+            'uid' => ['string', 'uid', 'max:255', 'unique:Users'],
             'email' => ['string', 'email', 'max:255', 'unique:Users'],
             'password' => ['string', 'min:6', 'max:12'],
         ]);
