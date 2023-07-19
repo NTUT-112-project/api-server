@@ -21,11 +21,11 @@ class LoginController extends Controller
         if($User){
             if ($User->update(['api_token'=>$api_token])) { //updata api_token
                 if ($User->isAdmin)
-                    return "login as admin, your api token is $api_token";
+                    return $this->sendResponse($api_token,"login as admin.");
                 else
-                    return "login as user, your api token is $api_token";
+                    return $this->sendResponse($api_token,"login as user.");
             }
-        }else return "Wrong email or password！";
+        }else return $this->sendError([],"Wrong email or password！",403);
 
     }
 }

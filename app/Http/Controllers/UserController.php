@@ -44,7 +44,7 @@ class UserController extends Controller
             'password' => ['required','string', 'min:6', 'max:12'],
             ]);
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+               return $this->sendResponse($validator->errors(),"Register failed");
             }
             $api_token = Str::random(10);
             $create = User::create([
@@ -56,7 +56,7 @@ class UserController extends Controller
             ]);
 
             if ($create) {
-                return "Register as an admin. Your Token is $api_token.";
+                return $this->sendResponse($api_token,"Register as an admin.");
             }
 
         } catch (Exception $e) {
@@ -72,7 +72,7 @@ class UserController extends Controller
         'password' => ['required','string', 'min:6', 'max:12'],
         ]);
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->sendResponse($validator->errors(),"Register failed");
         }
         $api_token = Str::random(10);
         $create = User::create([
@@ -83,9 +83,7 @@ class UserController extends Controller
         ]);
 
         if ($create)
-            return "Register as a normal user. Your api token is $api_token";
-        else
-            return $validateResult;
+            return $this->sendResponse($api_token,"Register as a normal user.");
     }
 
     /**
@@ -106,7 +104,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return sendError($validator->errors(),'Validation Error.',422);
+            return $this->sendError($validator->errors(),'Validation Error.',422);
         }
         $User = Auth::user();
         if ($User->update($request->all()))
@@ -124,8 +122,10 @@ class UserController extends Controller
         if (Auth::user()->isAdmin){
             if ($Users->delete())
                 return $this->sendResponse($Users->toArray(),'User deleted successfully.');
+            else
+                return $this->sendError([],"User doesn't exist",403);
         }
         else
-            return "You have no authority to delete";
+            return $this->sendError([],"You have no authority to delete",403);
     }
 }

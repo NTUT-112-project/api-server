@@ -28,11 +28,11 @@ Route::post('user', [UserController::class, 'store']); //register
 Route::post('login', [LoginController::class, 'login']); //login
 
 
-//http://127.0.0.1:8000/api/user?apiToken={apiToken}
+//http://127.0.0.1:8000/api/user?api_token={api_token}
 Route::middleware('auth:api')->get('user', [UserController::class, 'info']);  //check info
-//http://127.0.0.1:8000/api/user?apiToken={apiToken}
+//http://127.0.0.1:8000/api/user?api_token={api_token}
 Route::middleware('auth:api')->put('user', [UserController::class, 'update']); //edit account
-//http://127.0.0.1:8000/api/user/{id}?apiToken={apiToken}
+//http://127.0.0.1:8000/api/user/{id}?api_token={api_token}
 Route::middleware('auth:api')->delete('user/{users}', [UserController::class, 'destroy']); //delete
-//http://127.0.0.1:8000/api/logout?apiToken={apiToken}
+//http://127.0.0.1:8000/api/logout?api_token={api_token}
 Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout']); //logout
