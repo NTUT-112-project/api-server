@@ -17,13 +17,13 @@ class LoginController extends Controller
         else{
             $User = User::where('uid', $request->uid)->where('password', $request->password)->first();
         } 
-        $apiToken = Str::random(10); //generate an apiToken
+        $api_token = Str::random(10); //generate an api_token
         if($User){
-            if ($User->update(['apiToken'=>$apiToken])) { //updata apiToken
+            if ($User->update(['api_token'=>$api_token])) { //updata api_token
                 if ($User->isAdmin)
-                    return "login as admin, your api token is $apiToken";
+                    return "login as admin, your api token is $api_token";
                 else
-                    return "login as user, your api token is $apiToken";
+                    return "login as user, your api token is $api_token";
             }
         }else return "Wrong email or password！";
 

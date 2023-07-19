@@ -46,17 +46,17 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
             }
-            $apiToken = Str::random(10);
+            $api_token = Str::random(10);
             $create = User::create([
                 'uid' => $request['uid'],
                 'email' => $request['email'],
                 'password' => $request['password'],
                 'isAdmin' => '1',
-                'apiToken' => $apiToken,
+                'api_token' => $api_token,
             ]);
 
             if ($create) {
-                return "Register as an admin. Your Token is $apiToken.";
+                return "Register as an admin. Your Token is $api_token.";
             }
 
         } catch (Exception $e) {
@@ -74,16 +74,16 @@ class UserController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], JsonResponse::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $apiToken = Str::random(10);
+        $api_token = Str::random(10);
         $create = User::create([
             'uid' => $request['uid'],
             'email' => $request['email'],
             'password' => $request['password'],
-            'apiToken' => $apiToken,
+            'api_token' => $api_token,
         ]);
 
         if ($create)
-            return "Register as a normal user. Your api token is $apiToken";
+            return "Register as a normal user. Your api token is $api_token";
         else
             return $validateResult;
     }

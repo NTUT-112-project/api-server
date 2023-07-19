@@ -11,7 +11,7 @@ class LogoutController extends Controller
 {
    public function logout()
    {
-       if ( Auth::user()->update(['apiToken'=>'logged out'])) {//update apiToken
+       if ( Auth::user()->update(['api_token'=>'logged out'])) {//update api_token
            return "You've logged out";
        }
    }
