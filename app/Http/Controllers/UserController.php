@@ -117,15 +117,15 @@ class UserController extends Controller
      * @param \App\Models\User $Users
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $Users)
+    
+    public function destroy(Request $request, $uid)
     {
-        if (Auth::user()->isAdmin){
-            if ($Users->delete())
-                return $this->sendResponse($Users->toArray(),'User deleted successfully.');
-            else
-                return $this->sendError([],"User doesn't exist",403);
+        $user = User::where('uid', $uid)->first();
+        if (!$user) {
+            return $this->sendError([],'User not found',404);
         }
-        else
-            return $this->sendError([],"You have no authority to delete",403);
+        $user->delete();
+        return $this->sendResponse($uid.'deleted','User deleted successfully');
     }
 }
+

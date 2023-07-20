@@ -32,7 +32,7 @@ Route::post('login', [LoginController::class, 'login']); //login
 Route::middleware('auth:api')->get('user', [UserController::class, 'info']);  //check info
 //http://127.0.0.1:8000/api/user?api_token={api_token}
 Route::middleware('auth:api')->put('user', [UserController::class, 'update']); //edit account
-//http://127.0.0.1:8000/api/user/{id}?api_token={api_token}
-Route::middleware('auth:api')->delete('user/{users}', [UserController::class, 'destroy']); //delete
+//http://127.0.0.1:8000/api/user/{uid}?api_token={api_token}
+Route::middleware('auth:api')->delete('user/{uid}', [UserController::class, 'destroy']); //delete
 //http://127.0.0.1:8000/api/logout?api_token={api_token}
 Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout']); //logout
