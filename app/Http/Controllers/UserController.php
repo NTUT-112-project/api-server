@@ -44,7 +44,7 @@ class UserController extends Controller
             'password' => ['required','string', 'min:6', 'max:12'],
             ]);
             if ($validator->fails()) {
-               return $this->sendResponse($validator->errors(),"Register failed");
+               return $this->sendError($validator->errors(),"Register failed",403);
             }
             $api_token = Str::random(10);
             $create = User::create([
@@ -72,7 +72,7 @@ class UserController extends Controller
         'password' => ['required','string', 'min:6', 'max:12'],
         ]);
         if ($validator->fails()) {
-            return $this->sendResponse($validator->errors(),"Register failed");
+            return $this->sendError($validator->errors(),"Register failed",403);
         }
         $api_token = Str::random(10);
         $create = User::create([
