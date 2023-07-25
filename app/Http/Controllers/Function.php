@@ -3,7 +3,8 @@
 // composer require openai-php/client
 // composer require php-http/discovery php-http/async-client-implementation:*
 
-require_once('app//vendor//autoload.php');
+ini_set('include_path', dirname(dirname(dirname(__FILE__))));
+require_once('vendor//autoload.php');
 // For loading OpenAI libary
 
 require_once('key.php');
