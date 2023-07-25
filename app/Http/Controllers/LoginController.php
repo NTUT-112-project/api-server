@@ -11,16 +11,21 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $User = User::where('email', $request->email)->where('password', $request->password)->first();
-        $apiToken = Str::random(10); //generate an api_token
+        if($request->email!=null){
+            $User = User::where('email', $request->email)->where('password', $request->password)->first();
+        } 
+        else{
+            $User = User::where('uid', $request->uid)->where('password', $request->password)->first();
+        } 
+        $api_token = Str::random(10); //generate an api_token
         if($User){
-            if ($User->update(['api_token'=>$apiToken])) { //updata api_token
+            if ($User->update(['api_token'=>$api_token])) { //updata api_token
                 if ($User->isAdmin)
-                    return "login as admin, your api token is $apiToken";
+                    return $this->sendResponse($api_token,"login as admin.");
                 else
-                    return "login as user, your api token is $apiToken";
+                    return $this->sendResponse($api_token,"login as user.");
             }
-        }else return "Wrong email or password！";
+        }else return $this->sendError([],"Wrong email or password！",403);
 
     }
 }

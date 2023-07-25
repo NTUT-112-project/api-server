@@ -8,6 +8,7 @@ use Validator;//for data validation
 use App\Http\Controllers\Controller;//base controller
 use Illuminate\Support\Facades\Auth;//for Auth::user();returens the 
 use Str;//for Str::random
+use Illuminate\Http\JsonResponse;
 class UserController extends Controller
 {
     /**
@@ -15,13 +16,14 @@ class UserController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function info()
     {
         if (Auth::user()->isAdmin) {
             return $this->sendResponse(User::all()->toArray(),'Users retrieved successfully.');
         } else {
             $User=[
-                'mail' => Auth::user()->email,
+                'uid' => Auth::user()->uid,
+                'email' => Auth::user()->email,
                 'password' => Auth::user()->password,
             ];
             return $this->sendResponse($User,'Users retrieved successfully.');
@@ -36,21 +38,25 @@ class UserController extends Controller
      */
       public function adminStore(Request $request) {//register admin account
         try {
-            $request->validate([
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
-                'password' => ['required', 'string', 'min:6', 'max:12'], 
+            $validator = Validator::make($request->all(), [ //data validation test
+            'uid' => ['required','string', 'max:255', 'unique:Users'],
+            'email' => ['required','string', 'email', 'max:255', 'unique:Users'],
+            'password' => ['required','string', 'min:6', 'max:12'],
             ]);
-
-            $apiToken = Str::random(10);
+            if ($validator->fails()) {
+               return $this->sendError($validator->errors(),"Register failed",403);
+            }
+            $api_token = Str::random(10);
             $create = User::create([
+                'uid' => $request['uid'],
                 'email' => $request['email'],
                 'password' => $request['password'],
                 'isAdmin' => '1',
-                'api_token' => $apiToken,
+                'api_token' => $api_token,
             ]);
 
             if ($create) {
-                return "Register as an admin. Your Token is $apiToken.";
+                return $this->sendResponse($api_token,"Register as an admin.");
             }
 
         } catch (Exception $e) {
@@ -60,28 +66,31 @@ class UserController extends Controller
     }
     public function store(Request $request)//register normal account
     {
-        $request->validate([ 
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:Users'],
-            'password' => ['required', 'string', 'min:6', 'max:12'],
-        ]);        
-        $apiToken = Str::random(10);
+        $validator = Validator::make($request->all(), [ //data validation test
+        'uid' => ['required','string', 'max:255', 'unique:Users'],
+        'email' => ['required','string', 'email', 'max:255', 'unique:Users'],
+        'password' => ['required','string', 'min:6', 'max:12'],
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors(),"Register failed",403);
+        }
+        $api_token = Str::random(10);
         $create = User::create([
+            'uid' => $request['uid'],
             'email' => $request['email'],
             'password' => $request['password'],
-            'api_token' => $apiToken,
+            'api_token' => $api_token,
         ]);
 
         if ($create)
-            return "Register as a normal user. Your api token is $apiToken";
-        else
-            return "Registration failed";
+            return $this->sendResponse($api_token,"Register as a normal user.");
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\User $Users
+     * @param \App\Models\User $Users
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -89,12 +98,13 @@ class UserController extends Controller
 
         $input = $request->all();
         $validator = Validator::make($input, [ //data validation test
+            'uid' => ['string', 'max:255', 'unique:Users'],
             'email' => ['string', 'email', 'max:255', 'unique:Users'],
             'password' => ['string', 'min:6', 'max:12'],
         ]);
 
         if ($validator->fails()) {
-            return sendError($validator->errors(),'Validation Error.',422);
+            return $this->sendError($validator->errors(),'Validation Error.',422);
         }
         $User = Auth::user();
         if ($User->update($request->all()))
@@ -104,16 +114,18 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\User $Users
+     * @param \App\Models\User $Users
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $Users)
+    
+    public function destroy(Request $request, $uid)
     {
-        if (Auth::user()->isAdmin){
-            if ($Users->delete())
-                return $this->sendResponse($Users->toArray(),'User deleted successfully.');
+        $user = User::where('uid', $uid)->first();
+        if (!$user) {
+            return $this->sendError([],'User not found',404);
         }
-        else
-            return "You have no authority to delete";
+        $user->delete();
+        return $this->sendResponse($uid.'deleted','User deleted successfully');
     }
 }
+
