@@ -23,7 +23,7 @@ class UserController extends Controller
         } else {
             $User=[
                 'uid' => Auth::user()->uid,
-                'mail' => Auth::user()->email,
+                'email' => Auth::user()->email,
                 'password' => Auth::user()->password,
             ];
             return $this->sendResponse($User,'Users retrieved successfully.');
