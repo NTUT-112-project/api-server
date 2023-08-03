@@ -1,4 +1,4 @@
 <?php
-define('GPTAPI_key', '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');
+define('GPTAPI_key', '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');
 // https://platform.openai.com/account/api-keys for setting api key
 ?>
