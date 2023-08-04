@@ -11,11 +11,12 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
+        $sha256password=hash('sha256',$request->password,false);
         if($request->email!=null){
-            $User = User::where('email', $request->email)->where('password', $request->password)->first();
+            $User = User::where('email', $request->email)->where('password', $sha256password)->first();
         } 
         else{
-            $User = User::where('uid', $request->uid)->where('password', $request->password)->first();
+            $User = User::where('uid', $request->uid)->where('password', $sha256password)->first();
         } 
         $api_token = Str::random(10); //generate an api_token
         if($User){

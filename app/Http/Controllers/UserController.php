@@ -50,7 +50,7 @@ class UserController extends Controller
             $create = User::create([
                 'uid' => $request['uid'],
                 'email' => $request['email'],
-                'password' => $request['password'],
+                'password' => hash('sha256',$request['password'],false),
                 'isAdmin' => '1',
                 'api_token' => $api_token,
             ]);
@@ -78,7 +78,7 @@ class UserController extends Controller
         $create = User::create([
             'uid' => $request['uid'],
             'email' => $request['email'],
-            'password' => $request['password'],
+            'password' => hash('sha256', $request['password'], false),
             'api_token' => $api_token,
         ]);
 
@@ -125,7 +125,7 @@ class UserController extends Controller
             return $this->sendError([],'User not found',404);
         }
         $user->delete();
-        return $this->sendResponse($uid.'deleted','User deleted successfully');
+        return $this->sendResponse('user "'. $uid.'" deleted','User deleted successfully');
     }
 }
 
