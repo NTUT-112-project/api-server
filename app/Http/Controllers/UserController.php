@@ -95,7 +95,6 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-
         $input = $request->all();
         $validator = Validator::make($input, [ //data validation test
             'uid' => ['string', 'max:255', 'unique:Users'],
@@ -107,8 +106,13 @@ class UserController extends Controller
             return $this->sendError($validator->errors(),'Validation Error.',422);
         }
         $User = Auth::user();
-        if ($User->update($request->all()))
-            return $this->sendResponse($User->toArray(),'User updated successfully.');
+        if ($User->update([
+            'uid' => $request['uid'],
+            'email' => $request['email'],
+            'password' => hash('sha256', $request['password'], false),
+        ])){
+            return $this->sendResponse($User->toArray(), 'User updated successfully.');
+        }
     }
 
     /**
