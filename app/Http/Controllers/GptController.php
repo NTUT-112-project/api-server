@@ -2,20 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use Error;
+use Exception;
 use Illuminate\Http\Request;
+use Validator;
 
+define('GPTAPI_key', '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');
 class GptController extends Controller
 {
+    /**
+     * returns a required translate result based on gpt
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
     public function gpt_translate(Request $request)
     {
-        //TODO: create migration tables for translation
-        //TODO: make it authorize restricted
-        require_once('key.php');
+        $validator = Validator::make($request->all(), [ //data validation test
+            'src_language' => ['string'],
+            'dist_language' => ['required', 'string'],
+            'phrase' => ['required', 'string'],
+        ]);
+        if($validator->fails()){
+            return $this->sendError($validator->errors(), "translation failed", 403);
+        } 
+
         $api_key = GPTAPI_key;
-
-        $task = "將得到的句子翻譯成英文";
-        $question = "原油可以以 1000:27 的比例分餾出乙烯";
-
+        if($request['src_language']!=null){
+            $task = "translate from ".$request['src_language']." to ".$request['dist_language'];
+        }
+        else{
+            $task = "translate to " . $request['dist_language'];
+        }
+        $question = $request['phrase'];
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://api.openai.com/v1/chat/completions');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -43,20 +61,23 @@ class GptController extends Controller
             \"frequency_penalty\": 0,
             \"presence_penalty\": 0
         }");
+        try{
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-        $response = curl_exec($ch);
-        curl_close($ch);
+            $find = "content";
+            $pos = strpos($response, $find);
 
-        $find = "content";
-        $pos = strpos($response, $find);
+            $R_response = substr($response, $pos + 11, -1);
 
-        $R_response = substr($response, $pos + 11, -1);
+            $find = "finish_reason";
+            $pos = strrpos($R_response, $find);         // From offest -1 to search $find
 
-        $find = "finish_reason";
-        $pos = strrpos($R_response, $find);         // From offest -1 to search $find
-
-        $R_response = substr($R_response, 0, $pos - 18);
-        return $R_response;
-        //TODO: create return data format
+            $R_response = substr($R_response, 0, $pos - 18);
+            return $this->sendResponse($response, 'translate successfully.');
+        }
+        catch (Exception $e){
+            return $this->sendError($e, "translation failed", 500);
+        }
     }
 }

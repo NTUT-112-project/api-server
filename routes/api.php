@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GptController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
@@ -27,7 +28,6 @@ Route::post('user', [UserController::class, 'store']); //register
 // http://127.0.0.1:8000/api/login with email/password
 Route::post('login', [LoginController::class, 'login']); //login
 
-
 //http://127.0.0.1:8000/api/user?api_token={api_token}
 Route::middleware('auth:api')->get('user', [UserController::class, 'info']);  //check info
 //http://127.0.0.1:8000/api/user?api_token={api_token}
@@ -36,3 +36,6 @@ Route::middleware('auth:api')->put('user', [UserController::class, 'update']); /
 Route::middleware('auth:api')->delete('user/{uid}', [UserController::class, 'destroy']); //delete
 //http://127.0.0.1:8000/api/logout?api_token={api_token}
 Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout']); //logout
+
+// http://127.0.0.1:8000/api/gpt_translate
+Route::post('gpt_translate',[GptController::class, 'gpt_translate']);

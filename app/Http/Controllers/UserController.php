@@ -95,8 +95,7 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $input = $request->all();
-        $validator = Validator::make($input, [ //data validation test
+        $validator = Validator::make($request->all(), [ //data validation test
             'uid' => ['string', 'max:255', 'unique:Users'],
             'email' => ['string', 'email', 'max:255', 'unique:Users'],
             'password' => ['string', 'min:6', 'max:12'],
