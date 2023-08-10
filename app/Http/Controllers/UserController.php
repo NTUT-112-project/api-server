@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;//class for Users
 use Illuminate\Http\Request;
-use Validator;//for data validation
+use Illuminate\Support\Facades\Validator;//for data validation
 use App\Http\Controllers\Controller;//base controller
 use Illuminate\Support\Facades\Auth;//for Auth::user();returens the 
 use Str;//for Str::random
