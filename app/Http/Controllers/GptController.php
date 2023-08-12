@@ -1,12 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
+define('GPTAPI_key', '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');
 
-define('GPTAPI_key', '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');
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Message;
 
 class GptController extends Controller
 {
@@ -18,9 +19,9 @@ class GptController extends Controller
     public function gpt_translate(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'src_language' => ['string'],
-            'dist_language' => ['required', 'string'],
-            'phrase' => ['required', 'string'],
+            'srcLanguage' => ['string'],
+            'distLanguage' => ['required', 'string'],
+            'srcText' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
@@ -29,17 +30,17 @@ class GptController extends Controller
 
         $api_key = GPTAPI_key; // Use environment variable or config for API key
 
-        if ($request['src_language'] != null) {
-            $task = "translate from " . $request['src_language'] . " to " . $request['dist_language'];
+        if ($request['srcLanguage'] != null) {
+            $task = "translate from " . $request['srcLanguage'] . " to " . $request['distLanguage'];
         } else {
-            $task = "translate to " . $request['dist_language'];
+            $task = "translate to " . $request['distLanguage'];
         }
 
-        $question = $request['phrase'];
+        $question = $request['srcText'];
 
         $client = new Client(['base_uri' => 'https://api.openai.com/']);
 
-        try{
+        // try{
             $response = $client->request('POST', 'v1/chat/completions', [
                 'verify' => false,
                 'headers' => [
@@ -65,10 +66,12 @@ class GptController extends Controller
                     "presence_penalty" => 0
                 ]
             ]);
-            return $response->getBody()->getContents();
-        }
-        catch (Exception $e){
-            return $this->sendError($e,'translation failed','403');
-        }
+            $data_obj=json_decode($response->getBody()->getContents());
+            $translation= $data_obj->choices[0]->message->content;
+            return $this->sendResponse($translation,'translation successful');
+        // }
+        // catch (Exception $e){
+        //     return $this->sendError($e,'translation failed','403');
+        // }
     }
 }
