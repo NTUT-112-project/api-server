@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-define('GPTAPI_key', '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');
+define('GPTAPI_key', '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');
 
 use Exception;
 use Illuminate\Http\Request;
@@ -40,38 +40,40 @@ class GptController extends Controller
 
         $client = new Client(['base_uri' => 'https://api.openai.com/']);
 
-        // try{
-            $response = $client->request('POST', 'v1/chat/completions', [
-                'verify' => false,
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer ' . $api_key,
-                ],
-                'json' => [
-                    "model" => "gpt-3.5-turbo",
-                    "messages" => [
-                        [
-                            "role" => "system",
-                            "content" => $task,
-                        ],
-                        [
-                            "role" => "user",
-                            "content" => $question,
-                        ]
+        $response = $client->request('POST', 'v1/chat/completions', [
+            'verify' => false,
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $api_key,
+            ],
+            'json' => [
+                "model" => "gpt-3.5-turbo",
+                "messages" => [
+                    [
+                        "role" => "system",
+                        "content" => $task,
                     ],
-                    "temperature" => 0,
-                    "max_tokens" => 256,
-                    "top_p" => 1,
-                    "frequency_penalty" => 0,
-                    "presence_penalty" => 0
-                ]
-            ]);
-            $data_obj=json_decode($response->getBody()->getContents());
-            $translation= $data_obj->choices[0]->message->content;
-            return $this->sendResponse($translation,'translation successful');
-        // }
-        // catch (Exception $e){
-        //     return $this->sendError($e,'translation failed','403');
-        // }
+                    [
+                        "role" => "user",
+                        "content" => $question,
+                    ]
+                ],
+                "temperature" => 0,
+                "max_tokens" => 256,
+                "top_p" => 1,
+                "frequency_penalty" => 0,
+                "presence_penalty" => 0
+            ]
+        ]);
+        if($response->getStatusCode()==200){
+            $data_obj = json_decode($response->getBody()->getContents());
+            $translation = $data_obj->choices[0]->message->content;
+            return $this->sendResponse($translation, 'translation successful');
+        }
+        else
+        {
+            return $this->sendError($response->getBody(), 'translation failed');
+        }
+        
     }
 }
