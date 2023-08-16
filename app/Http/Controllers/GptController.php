@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-define('GPTAPI_key', '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');
 
 use Exception;
 use Illuminate\Http\Request;
@@ -22,18 +21,19 @@ class GptController extends Controller
             'srcLanguage' => ['string'],
             'distLanguage' => ['required', 'string'],
             'srcText' => ['required', 'string'],
+            'gptApiKey'=> ['required','string'],
         ]);
 
         if ($validator->fails()) {
             return $this->sendError($validator->errors(), "translation failed", 403);
         }
 
-        $api_key = GPTAPI_key; // Use environment variable or config for API key
+        $api_key = $request['gptApiKey']; // Use environment variable or config for API key
 
-        if ($request['srcLanguage'] != null) {
-            $task = "translate from " . $request['srcLanguage'] . " to " . $request['distLanguage'];
+        if ($request['srcLanguage'] != 'none') {
+            $task = "translate the phrase below from " . $request['srcLanguage'] . " to " . $request['distLanguage'];
         } else {
-            $task = "translate to " . $request['distLanguage'];
+            $task = "translate the phrase below to " . $request['distLanguage'];
         }
 
         $question = $request['srcText'];
