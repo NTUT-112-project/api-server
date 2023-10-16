@@ -15,17 +15,17 @@ services:
       - ./:/var/www
     ports:
       - 8000:8000
-    depends_on: #indicates that build php after these
+    depends_on:
       - database
       - redis
 
   database:
     image: mysql:8.0
     ports:
-      - 3306:3306
+      - 3305:3306
     environment:
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_USERNAME=${DB_USERNAME}
+      - MYSQL_DATABASE=${DB_DATABASE} 
+      - MYSQL_USER=${DB_USERNAME}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     volumes:

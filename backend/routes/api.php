@@ -21,12 +21,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// http://127.0.0.1:8000/api/user with email/password
-Route::post('admin', [UserController::class, 'adminStore']); //admin register
-// http://127.0.0.1:8000/api/user with email/password
-Route::post('user', [UserController::class, 'store']); //register
-// http://127.0.0.1:8000/api/login with email/password
-Route::post('login', [LoginController::class, 'login']); //login
+// http://127.0.0.1:8000/api/adminSignUp with email/password
+Route::post('adminSignUp', [UserController::class, 'adminStore']); //admin register
+// http://127.0.0.1:8000/api/userSignUp with email/password
+Route::post('userSignUp', [UserController::class, 'store']); //register
+// http://127.0.0.1:8000/api/signIn with email/password
+Route::post('signIn', [LoginController::class, 'login']); //login
 
 //http://127.0.0.1:8000/api/user?api_token={api_token}
 Route::middleware('auth:api')->get('user', [UserController::class, 'info']);  //check info
