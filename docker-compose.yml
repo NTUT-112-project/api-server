@@ -1,23 +1,15 @@
 version: '3.8'
 
 services:
-  php:
+  app:
     build:
-      context: ./backend
-      target: php
-      args:
-        - APP_ENV=${APP_ENV}
-    environment:
-      - APP_ENV=${APP_ENV}
-      - CONTAINER_ROLE=app
+      context: ./src/Docker
+      target: Dockerfile
     working_dir: /var/www
     volumes:
-      - ./:/var/www
+      - ./src/:/var/www
     ports:
-      - 8000:8000
-    depends_on:
-      - database
-      - redis
+      - 9000:9000
 
   database:
     image: mysql:8.0
