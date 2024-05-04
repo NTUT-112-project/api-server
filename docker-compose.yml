@@ -23,8 +23,9 @@ services:
       - 9000:9000
   db:
     image: mysql:8.0
+    container_name: db
     ports:
-      - 3305:3306
+      - 3306:3306
     environment:
       - MYSQL_DATABASE=${DB_DATABASE} 
       - MYSQL_USER=${DB_USERNAME}
