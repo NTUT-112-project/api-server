@@ -14,7 +14,7 @@ services:
       - db
   app:
     build:
-      context: ./src/Docker
+      context: ./src
       target: Dockerfile
     working_dir: /var/www
     volumes:
