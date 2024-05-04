@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./src:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - app
+      - db
   app:
     build:
       context: ./src/Docker
@@ -10,8 +21,7 @@ services:
       - ./src/:/var/www
     ports:
       - 9000:9000
-
-  database:
+  db:
     image: mysql:8.0
     ports:
       - 3305:3306
@@ -29,7 +39,7 @@ services:
     ports:
       - 3304:80
     depends_on:
-      - database
-      
+      - db
+
 volumes:
   db-data: ~
