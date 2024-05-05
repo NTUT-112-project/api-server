@@ -20,3 +20,5 @@ php artisan migrate
 php artisan clear-compiled
 composer dump-autoload
 php artisan optimize
+
+exec php-fpm
