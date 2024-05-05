@@ -15,8 +15,10 @@ services:
   app:
     build:
       context: ./src
-      target: Dockerfile
+      dockerfile: Dockerfile
     working_dir: /var/www
+    env_file:
+      - ./src/.env
     volumes:
       - ./src/:/var/www
     ports:
@@ -26,6 +28,8 @@ services:
     container_name: db
     ports:
       - 3306:3306
+    env_file:
+      - ./src/.env
     environment:
       - MYSQL_DATABASE=${DB_DATABASE} 
       - MYSQL_USER=${DB_USERNAME}
