@@ -21,5 +21,4 @@ php artisan clear-compiled
 composer dump-autoload
 php artisan optimize
 
-php artisan serve --port=$PORT --host=0.0.0.0
-exec docker-php-entrypoint "$@"
+exec php-fpm

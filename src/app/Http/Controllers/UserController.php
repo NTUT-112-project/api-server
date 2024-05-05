@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;//class for Users
+use App\Models\User;//class for users
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;//for data validation
 use App\Http\Controllers\Controller;//base controller
@@ -19,14 +19,14 @@ class UserController extends Controller
     public function info()
     {
         if (Auth::user()->isAdmin) {
-            return $this->sendResponse(User::all()->toArray(),'Users retrieved successfully.');
+            return $this->sendResponse(User::all()->toArray(),'users retrieved successfully.');
         } else {
             $User=[
                 'uid' => Auth::user()->uid,
                 'email' => Auth::user()->email,
                 'password' => Auth::user()->password,
             ];
-            return $this->sendResponse($User,'Users retrieved successfully.');
+            return $this->sendResponse($User,'users retrieved successfully.');
         }
     }
 
@@ -39,8 +39,8 @@ class UserController extends Controller
       public function adminStore(Request $request) {//register admin account
         try {
             $validator = Validator::make($request->all(), [ //data validation test
-            'uid' => ['required','string', 'max:255', 'unique:Users'],
-            'email' => ['required','string', 'email', 'max:255', 'unique:Users'],
+            'uid' => ['required','string', 'max:255', 'unique:users'],
+            'email' => ['required','string', 'email', 'max:255', 'unique:users'],
             'password' => ['required','string', 'min:6', 'max:12'],
             ]);
             if ($validator->fails()) {
@@ -67,8 +67,8 @@ class UserController extends Controller
     public function store(Request $request)//register normal account
     {
         $validator = Validator::make($request->all(), [ //data validation test
-        'uid' => ['required','string', 'max:255', 'unique:Users'],
-        'email' => ['required','string', 'email', 'max:255', 'unique:Users'],
+        'uid' => ['required','string', 'max:255', 'unique:users'],
+        'email' => ['required','string', 'email', 'max:255', 'unique:users'],
         'password' => ['required','string', 'min:6', 'max:12'],
         ]);
         if ($validator->fails()) {
@@ -90,14 +90,14 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\User $Users
+     * @param \App\Models\User $users
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [ //data validation test
-            'uid' => ['string', 'max:255', 'unique:Users'],
-            'email' => ['string', 'email', 'max:255', 'unique:Users'],
+            'uid' => ['string', 'max:255', 'unique:users'],
+            'email' => ['string', 'email', 'max:255', 'unique:users'],
             'password' => ['string', 'min:6', 'max:12'],
         ]);
 
@@ -117,7 +117,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\User $Users
+     * @param \App\Models\User $users
      * @return \Illuminate\Http\Response
      */
     
