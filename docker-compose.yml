@@ -13,14 +13,13 @@ services:
       - app
       - db
   app:
+    container_name: laravel_app
     build:
       context: ./src
       dockerfile: Dockerfile
     working_dir: /var/www
-    env_file:
-      - ./src/.env
     volumes:
-      - ./src/:/var/www
+      - ./src:/var/www
     ports:
       - 9000:9000
   db:
