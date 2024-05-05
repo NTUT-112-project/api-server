@@ -1,7 +1,9 @@
 #!/bin/bash
-
-if [ ! -f "vendor/autoload.php" ]; then
-    composer install --no-progess --no-interaction
+if [ ! -d "vendor" ] || [ ! -f "vendor/autoload.php" ]; then
+    echo "directory \"vendor\" or \"vendor/autoload.php\" not found. Installing composer dependencies..."
+    composer install
+else
+    echo "directory \"vendor\" and \"vendor/autoload.php\" file exists."
 fi
 
 if [ ! -f ".env" ]; then
