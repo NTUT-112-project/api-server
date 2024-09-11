@@ -9,7 +9,7 @@ services:
       - ./nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - app
-      - db
+      - mysql
   app:
     container_name: laravel_app
     build:
@@ -20,16 +20,19 @@ services:
       - ./src:/var/www
     ports:
       - 9000:9000
-  db:
+    depends_on:
+      - mysql
+  mysql:
     image: mysql:8.0
-    container_name: db
+    container_name: mysql
     ports:
       - 3306:3306
     env_file:
-      - ./src/.env
+      - path: ./src/.env
+        required: true
     environment:
-      - MYSQL_DATABASE=${DB_DATABASE}
-      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=backend
+      - MYSQL_ROOT_PASSWORD=Aa648213579
     volumes:
       - db-data:/var/lib/mysql
       
@@ -38,8 +41,10 @@ services:
     container_name: phpmyadmin
     ports:
       - 3304:80
+    environment:
+      - PMA_HOST=mysql
     depends_on:
-      - db
+      - mysql
 
 volumes:
   db-data: ~
