@@ -53,14 +53,22 @@ services:
   ollama:
     container_name: ollama
     build: 
+      args:
+        - model=gemma2:27b
       context: ./ollama
       dockerfile: Dockerfile
     working_dir: /root/.ollama
-    ports:
-      - 8081:8081
     volumes:
-      - ollama-data:/root/.ollama
+      - ./ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
 
 volumes:
   db-data: ~
-  ollama-data: ~
