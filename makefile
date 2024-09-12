@@ -1,5 +1,10 @@
 .PHONY: rebuild-rootless
 .PHONY: rebuild-root
+.PHONY: reload
+
+reload:
+	sudo docker compose down
+	sudo docker compose up -d
 
 rebuild-rootless: prerequisites
 	docker compose down
