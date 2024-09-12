@@ -9,5 +9,7 @@ rebuild:
 	cp ./src/.env.example ./src/.env
 
 	chmod +x ./src/entrypoint.sh
+	chmod +x ./nginx/entrypoint.sh
+
 	docker compose down
 	docker compose up --build -d
