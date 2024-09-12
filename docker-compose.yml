@@ -11,7 +11,7 @@ services:
       - app
       - db
   app:
-    container_name: laravel_app
+    container_name: app
     build:
       context: ./src
       dockerfile: Dockerfile
