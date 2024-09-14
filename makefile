@@ -1,6 +1,7 @@
 .PHONY: rebuild-rootless
 .PHONY: rebuild-root
-.PHONY: reload
+.PHONY: reload-rootless
+.PHONY: reload-root
 
 reload-root:
 	sudo docker compose down
