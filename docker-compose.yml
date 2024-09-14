@@ -54,7 +54,7 @@ services:
     container_name: ollama
     build: 
       args:
-        - model=gemma2:27b
+        - model=phi3
       context: ./ollama
       dockerfile: Dockerfile
     working_dir: /root/.ollama

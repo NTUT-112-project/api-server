@@ -22,7 +22,7 @@ Route::get('/hi',function(){
     curl_setopt($ch, CURLOPT_URL, "http://ollama:11434/api/generate");
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-        "model" => "gemma2:27b",
+        "model" => "phi3",
         "prompt" => "Hi"
     ]));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
