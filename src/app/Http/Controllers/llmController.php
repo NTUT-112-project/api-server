@@ -29,9 +29,9 @@ class llmController extends Controller
         }
 
         if ($request['srcLanguage'] != 'none') {
-            $task = "only translate the phrase below from " . $request['srcLanguage'] . " to " . $request['distLanguage'] . ", and do not change the meaning of the phrase or add any additional information and reply.";
+            $task = "You are a translation engine. Translate any text from" . $request['srcLanguage'] . " to " . $request['distLanguage'] . "Do not provide any explanations, suggestions, or additional communication. Only return the translation.";
         } else {
-            $task = "only translate the phrase below to " . $request['distLanguage'] . ", and do not change the meaning of the phrase or add any additional information and reply.";
+            $task = "You are a translation engine. Translate any text to " . $request['distLanguage'] . "Do not provide any explanations, suggestions, or additional communication. Only return the translation.";
         }
 
         $question = $request['srcText'];
