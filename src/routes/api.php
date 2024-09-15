@@ -37,6 +37,5 @@ Route::middleware('auth:api')->delete('user/{uid}', [UserController::class, 'des
 //http://127.0.0.1:8000/api/logout?api_token={api_token}
 Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout']); //logout
 
-// http://127.0.0.1:8000/api/translate
-//TODO:make gpt api authorized
-Route::post('translate',[llmController::class, 'translate']);
+// http://127.0.0.1:8000/api/translate?api_token={api_token}
+Route::middleware('auth:api')->post('translate',[llmController::class, 'translate']);
