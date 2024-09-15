@@ -123,7 +123,11 @@ class UserController extends Controller
     
     public function destroy(Request $request, $uid)
     {
+        if (!Auth::user()->isAdmin) {
+            return $this->sendError([],'User labeled as admin, Permission denied',403);
+        }
         $user = User::where('uid', $uid)->first();
+        
         if (!$user) {
             return $this->sendError([],'User not found',404);
         }
