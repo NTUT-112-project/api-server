@@ -40,7 +40,7 @@ class llmController extends Controller
 
         $response = $client->request('POST', 'api/chat', [
             "json" => [
-                "model" => "phi3",
+                "model" => "A",
                 "messages" => [
                     [
                         "role" => "system",
