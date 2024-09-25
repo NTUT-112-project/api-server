@@ -66,4 +66,61 @@ class llmController extends Controller
         }
         
     }
+
+    public function streamTranslate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'srcLanguage' => ['string'],
+            'distLanguage' => ['required', 'string'],
+            'srcText' => ['required', 'string'],
+            'apiKey'=> ['required','string'],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors(), "translation failed", 403);
+        }
+
+        if ($request['srcLanguage'] != 'none') {
+            $task = "You are a translation engine. Translate any text from" . $request['srcLanguage'] . " to " . $request['distLanguage'] . "Do not provide any explanations, suggestions, or additional communication. Only return the translation.";
+        } else {
+            $task = "You are a translation engine. Translate any text to " . $request['distLanguage'] . "Do not provide any explanations, suggestions, or additional communication. Only return the translation.";
+        }
+
+        $question = $request['srcText'];
+
+        $client = new Client(['base_uri' => 'http://ollama:11434/']);
+
+        return response()->stream(function () use ($client, $task, $question) {
+            $response = $client->request('POST', 'api/chat', [
+                'stream' => true,  // Enable streaming
+                'json' => [
+                    'model' => 'A',
+                    'messages' => [
+                        [
+                            'role' => 'system',
+                            'content' => $task,
+                        ],
+                        [
+                            'role' => 'user',
+                            'content' => $question,
+                        ]
+                    ],
+                ],
+            ]);
+
+            // Read and process the streaming response
+            $body = $response->getBody();
+
+            while (!$body->eof()) {
+                $chunk = $body->read(1024);
+                if ($chunk) {
+                    echo $chunk;
+                }
+            }
+        }, 200, [
+            'Content-Type' => 'application/json',
+            'Cache-Control' => 'no-cache',
+            'Connection' => 'keep-alive',
+        ]);        
+    }
 }

@@ -39,3 +39,4 @@ Route::middleware('auth:api')->get('logout', [LogoutController::class,'logout'])
 
 // http://127.0.0.1:8000/api/translate?api_token={api_token}
 Route::middleware('auth:api')->post('translate',[llmController::class, 'translate']);
+Route::middleware('auth:api')->post('streamTranslate',[llmController::class, 'streamTranslate']);
