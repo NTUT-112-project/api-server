@@ -3,6 +3,9 @@
 .PHONY: reload-rootless
 .PHONY: reload-root
 
+portforwarding:
+	socat -v tcp4-listen:8081,fork,reuseaddr,bind=192.168.0.100 tcp4:localhost:8080
+	
 reload-root:
 	sudo docker compose down
 	sudo docker compose up -d
