@@ -9,6 +9,7 @@ services:
     volumes:
       - ./src:/var/www
       - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./nginx/certs/:/etc/nginx/certs/
     depends_on:
       - app
       - mysql
