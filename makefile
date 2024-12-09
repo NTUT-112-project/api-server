@@ -15,7 +15,7 @@ rebuild-root:prerequisites
 	sudo docker compose down
 	sudo docker compose up --build -d
 
-prerequisites: modelPull
+prerequisites: modelPull certs
 	if [ -f "./src/env" ]; then \
 		echo "recreating env file"; \
 		rm ./src/env; \
@@ -39,5 +39,6 @@ modelPull:
 		cp -r /usr/share/ollama/.ollama/models ./ollama; \
 	fi
 
-
+certs:
+	openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./nginx/certs/private.key -out ./nginx/certs/certificate.crt
 	
