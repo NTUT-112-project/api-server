@@ -20,11 +20,11 @@ prerequisites: modelPull certs
 		echo "recreating env file"; \
 		rm ./src/env; \
 	fi
-	cp ./src/.env.example ./src/.env
+	sudo cp ./src/.env.example ./src/.env
 
-	chmod +x ./src/entrypoint.sh
-	chmod +x ./nginx/entrypoint.sh
-	chmod +x ./ollama/entrypoint.sh
+	sudo chmod +x ./src/entrypoint.sh
+	sudo chmod +x ./nginx/entrypoint.sh
+	sudo chmod +x ./ollama/entrypoint.sh
 
 modelPull:
 	echo "checking ollama model prerequisites"
